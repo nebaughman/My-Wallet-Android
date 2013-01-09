@@ -17,13 +17,11 @@
 
 package piuk;
 
-import java.io.Serializable;
-
 import com.google.bitcoin.core.AddressFormatException;
 import com.google.bitcoin.core.Base58;
 import com.google.bitcoin.core.Utils;
 
-import piuk.Hash;
+import java.io.Serializable;
 
 public class BitcoinAddress implements Serializable {
 	private static final long serialVersionUID = 1L;

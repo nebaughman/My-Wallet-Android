@@ -12,16 +12,6 @@
 
     <repositories>
         <repository>
-            <id>bitcoinj-release</id>
-            <releases/>
-            <url>http://nexus.bitcoinj.org/content/repositories/releases</url>
-        </repository>
-        <repository>
-            <id>bitcoinj-snapshot</id>
-            <snapshots/>
-            <url>http://nexus.bitcoinj.org/content/repositories/snapshots</url>
-        </repository>
-        <repository>
             <id>cubeia</id>
             <snapshots/>
             <url>http://m2.cubeia.com/nexus/content/repositories/thirdparty</url>
@@ -87,9 +77,19 @@
             <!-- Remove this if you are not developing an Android app -->
             <classifier>android</classifier>
             <scope>system</scope>
-            <systemPath>${user.home}/Sites/blockchain.info/bitcoinj/target/bitcoinj-0.5-SNAPSHOT-android.jar</systemPath>
+            <systemPath>${user.home}/Sites/blockchain.info/android/bitcoinj/target/bitcoinj-0.5-SNAPSHOT-android.jar</systemPath>
         </dependency>
-	</dependencies>
+        <dependency>
+  			<groupId>android.support</groupId>
+  			<artifactId>compatibility-v4</artifactId>
+  			<version>10</version>
+		</dependency>
+        <dependency>
+            <groupId>de.roderick</groupId>
+            <artifactId>weberknecht</artifactId>
+            <version>0.1.1</version>
+        </dependency>
+    </dependencies>
 
 	<build>
 		<sourceDirectory>src</sourceDirectory>
@@ -108,6 +108,7 @@
 				<version>2.8.4</version>
 				<configuration>
 					<sdk>
+						<path>${user.home}/android-sdks</path>
 						<platform>10</platform>
 					</sdk>
 					<genDirectory>${basedir}/gen</genDirectory>

@@ -17,6 +17,23 @@
 
 package piuk.blockchain.android;
 
+import android.app.Application;
+import android.appwidget.AppWidgetManager;
+import android.appwidget.AppWidgetProviderInfo;
+import android.content.*;
+import android.content.pm.PackageManager.NameNotFoundException;
+import android.os.Handler;
+import android.os.IBinder;
+import android.preference.PreferenceManager;
+import android.widget.Toast;
+import com.google.bitcoin.core.*;
+import org.apache.commons.io.IOUtils;
+import piuk.BitcoinAddress;
+import piuk.Hash;
+import piuk.MyRemoteWallet;
+import piuk.blockchain.R;
+import piuk.blockchain.android.util.ErrorReporter;
+
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -27,35 +44,6 @@ import java.util.ArrayList;
 import java.util.Map.Entry;
 import java.util.Timer;
 import java.util.TimerTask;
-
-import org.apache.commons.io.IOUtils;
-
-import piuk.BitcoinAddress;
-import piuk.Hash;
-import piuk.MyRemoteWallet;
-import piuk.blockchain.R;
-import piuk.blockchain.android.util.ErrorReporter;
-
-import android.app.Application;
-import android.appwidget.AppWidgetManager;
-import android.appwidget.AppWidgetProviderInfo;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
-import android.content.SharedPreferences;
-import android.content.pm.PackageManager.NameNotFoundException;
-import android.net.Uri;
-import android.os.Handler;
-import android.os.IBinder;
-import android.preference.PreferenceManager;
-import android.widget.Toast;
-
-import com.google.bitcoin.core.AbstractWalletEventListener;
-import com.google.bitcoin.core.Address;
-import com.google.bitcoin.core.ECKey;
-import com.google.bitcoin.core.Wallet;
-import com.google.bitcoin.core.WalletEventListener;
 
 /**
  * @author Andreas Schildbach

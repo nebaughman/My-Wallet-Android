@@ -17,19 +17,12 @@
 
 package piuk.blockchain.android.util;
 
-import java.math.BigInteger;
-import java.util.Hashtable;
-
-import piuk.blockchain.android.Constants;
-
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.text.Editable;
-import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.TypefaceSpan;
-
 import com.google.bitcoin.core.Address;
 import com.google.bitcoin.core.Utils;
 import com.google.zxing.BarcodeFormat;
@@ -38,6 +31,10 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
+import piuk.blockchain.android.Constants;
+
+import java.math.BigInteger;
+import java.util.Hashtable;
 
 
 /**

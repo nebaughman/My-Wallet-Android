@@ -17,36 +17,15 @@
 
 package piuk.blockchain.android.ui;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.math.BigInteger;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.regex.Pattern;
-
-import com.google.bitcoin.core.AbstractWalletEventListener;
-import com.google.bitcoin.core.Transaction;
-import com.google.bitcoin.core.Wallet;
-import com.google.bitcoin.core.WalletEventListener;
-
-
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.ServiceConnection;
-import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.IBinder;
-import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.Menu;
@@ -57,12 +36,19 @@ import android.view.Window;
 import android.webkit.WebView;
 import android.widget.ImageButton;
 import android.widget.Toast;
+import com.google.bitcoin.core.AbstractWalletEventListener;
+import com.google.bitcoin.core.Wallet;
 import piuk.blockchain.R;
-import piuk.blockchain.android.BlockchainService;
 import piuk.blockchain.android.Constants;
 import piuk.blockchain.android.WalletApplication;
 import piuk.blockchain.android.util.ActionBarFragment;
 import piuk.blockchain.android.util.ErrorReporter;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
 
 /**
  * @author Andreas Schildbach

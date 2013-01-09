@@ -1,4 +1,4 @@
-export ANDROID_HOME=/Users/zootreeves/android-sdks 
+export ANDROID_HOME=/Users/blockchain/android-sdks
 
 API Calls used
 
@@ -37,7 +37,7 @@ your local Maven repository.
 
 Use Git to check out the project to your workspace:
 
-  git clone https://github.com/zootreeves/My-Wallet-Android
+  git clone https://github.com/blockchain/My-Wallet-Android
 
 Change to that directory.
 

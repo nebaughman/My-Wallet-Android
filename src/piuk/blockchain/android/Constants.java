@@ -104,7 +104,7 @@ public class Constants
 	public static final String PRIVACY_POLICY = "http://blockchain.info/privacy";
 
 	public static final String LICENSE_URL = "http://www.gnu.org/licenses/gpl-3.0.txt";
-	public static final String SOURCE_URL = "https://github.com/zootreeves/My-Wallet-Android/";
+	public static final String SOURCE_URL = "https://github.com/blockchain/My-Wallet-Android/";
 	public static final String CREDITS_BITCOINJ_URL = "http://code.google.com/p/bitcoinj/";
 	public static final String CREDITS_ZXING_URL = "http://code.google.com/p/zxing/";
 	public static final String CREDITS_BITCON_WALLET_ANDROID = "http://code.google.com/p/bitcoin-wallet/";

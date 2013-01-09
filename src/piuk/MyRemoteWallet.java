@@ -18,38 +18,24 @@
 
 package piuk;
 
+import android.util.Pair;
+import com.google.bitcoin.bouncycastle.util.encoders.Hex;
+import com.google.bitcoin.core.*;
+import com.google.bitcoin.core.Transaction.SigHash;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
+import org.json.simple.JSONValue;
+import piuk.MyBlockChain.MyBlock;
+import piuk.blockchain.android.Constants;
+
 import java.io.DataOutputStream;
 import java.math.BigInteger;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.security.MessageDigest;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.StringUtils;
-import org.json.simple.JSONValue;
-
-import piuk.MyBlockChain.MyBlock;
-import piuk.blockchain.android.Constants;
-
-import android.util.Pair;
-
-import com.google.bitcoin.bouncycastle.util.encoders.Hex;
-import com.google.bitcoin.core.ECKey;
-import com.google.bitcoin.core.NetworkParameters;
-import com.google.bitcoin.core.Sha256Hash;
-import com.google.bitcoin.core.StoredBlock;
-import com.google.bitcoin.core.Transaction;
-import com.google.bitcoin.core.TransactionOutput;
-import com.google.bitcoin.core.Wallet;
-import com.google.bitcoin.core.WalletTransaction;
-import com.google.bitcoin.core.Transaction.SigHash;
+import java.util.*;
 
 
 @SuppressWarnings("unchecked")
@@ -148,7 +134,7 @@ public class MyRemoteWallet extends MyWallet {
 			else if (connection.getResponseCode() == 500 && (connection.getContentType() == null || connection.getContentType().equals("text/plain")))
 				throw new Exception("Error From Server: " +  IOUtils.toString(connection.getErrorStream(), "UTF-8"));
 			else
-				throw new Exception("Unknowm reponse from server");
+				throw new Exception("Unknown response from server");
 
 		} finally {
 			connection.disconnect();
@@ -411,7 +397,7 @@ public class MyRemoteWallet extends MyWallet {
 		String hexString = new String(Hex.encode(tx.bitcoinSerialize()));
 
 		if (hexString.length() > 16384)
-			throw new Exception("My wallet cannot handle transactions over 16kb in size. Please try splitting your transaction");
+			throw new Exception("Blockchain wallet's cannot handle transactions over 16kb in size. Please try splitting your transaction");
 
 		String response = postURL(WebROOT + "pushtx", "tx="+hexString);
 

@@ -1,11 +1,9 @@
 package piuk;
 
+import com.google.bitcoin.core.Utils;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import piuk.Hash;
-
-import com.google.bitcoin.core.Utils;
 
 //TODO remove
 public class BitcoinScript {

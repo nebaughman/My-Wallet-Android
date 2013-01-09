@@ -25,6 +25,6 @@ FEATURES:
 This application is based on "Bitcoin Wallet for Android" by , the project is located at. All credit to the original authors.
 https://code.google.com/p/bitcoin-wallet/
 
-https://github.com/zootreeves/blockchain.info
+https://github.com/blockchain/My-Wallet
 
 License: GPLv3

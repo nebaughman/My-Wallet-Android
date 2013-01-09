@@ -1,21 +1,18 @@
 package piuk.blockchain.android.ui;
 
-import java.util.regex.Pattern;
-
-import piuk.blockchain.R;
-import piuk.blockchain.android.Constants;
-import piuk.blockchain.android.WalletApplication;
-import piuk.blockchain.android.util.ActionBarFragment;
 import android.content.Intent;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
-import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
+import piuk.blockchain.R;
+import piuk.blockchain.android.Constants;
+import piuk.blockchain.android.WalletApplication;
+import piuk.blockchain.android.util.ActionBarFragment;
+
+import java.util.regex.Pattern;
 
 public class PairWalletActivity extends AbstractWalletActivity {
 	private static final int REQUEST_CODE_SCAN = 0;
