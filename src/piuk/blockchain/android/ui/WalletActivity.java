@@ -63,11 +63,12 @@ public final class WalletActivity extends AbstractWalletActivity
 	public long lastShowedDecryptionError = 0;
 
 	private AbstractWalletEventListener eventListener = new AbstractWalletEventListener() {
-		public void onChange(Wallet arg0) {
+	    @Override
+		public void onChange(/*Wallet arg0*/) {
 
 			handler.post(new Runnable() {
 				public void run() {
-					checkDialogs();		
+					checkDialogs();
 				}
 			});
 		}
@@ -92,8 +93,8 @@ public final class WalletActivity extends AbstractWalletActivity
 
 				Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://blockchain.info/wallet/decryption-error"));
 
-				startActivity(browserIntent);	
-				
+				startActivity(browserIntent);
+
 				lastShowedDecryptionError = System.currentTimeMillis();
 			}
 		}
@@ -107,9 +108,9 @@ public final class WalletActivity extends AbstractWalletActivity
 
 
 		if (application.isNewWallet()) {
-			infoButton.setImageResource(R.drawable.ic_action_info_red);	
+			infoButton.setImageResource(R.drawable.ic_action_info_red);
 		} else {
-			infoButton.setImageResource(R.drawable.ic_action_info);	
+			infoButton.setImageResource(R.drawable.ic_action_info);
 		}
 	}
 
@@ -123,7 +124,7 @@ public final class WalletActivity extends AbstractWalletActivity
 
 		setContentView(R.layout.wallet_content);
 
-		final ActionBarFragment actionBar = getActionBar();
+		final ActionBarFragment actionBar = getActionBarFragment();
 
 		actionBar.setPrimaryTitle(R.string.app_name);
 
@@ -146,7 +147,7 @@ public final class WalletActivity extends AbstractWalletActivity
 		actionBar.addButton(R.drawable.ic_action_receive).setOnClickListener(new OnClickListener()
 		{
 			public void onClick(final View v)
-			{				
+			{
 				startActivity(new Intent(WalletActivity.this, RequestCoinsActivity.class));
 			}
 		});
@@ -163,7 +164,23 @@ public final class WalletActivity extends AbstractWalletActivity
 			}
 		});
 
+		actionBar.addButton(R.drawable.ic_action_address_book).setOnClickListener(new OnClickListener()
+        {
+            public void onClick(final View v)
+            {
+                WalletAddressesActivity.start(WalletActivity.this, true);
+            }
+        });
 
+		actionBar.addButton(R.drawable.ic_action_exchange).setOnClickListener(new OnClickListener()
+		{
+			public void onClick(final View v)
+			{
+				startActivity(new Intent(WalletActivity.this, ExchangeRatesActivity.class));
+			}
+		});
+
+		/*
 		if ((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE)
 		{
 			actionBar.addButton(R.drawable.ic_action_address_book).setOnClickListener(new OnClickListener()
@@ -182,6 +199,7 @@ public final class WalletActivity extends AbstractWalletActivity
 			ft.hide(fm.findFragmentById(R.id.exchange_rates_fragment));
 			ft.commit();
 		}
+		*/
 
 		checkVersionAndTimeskewAlert();
 

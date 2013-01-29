@@ -64,7 +64,7 @@ public abstract class AbstractWalletActivity extends FragmentActivity
 		return application;
 	}
 
-	protected ActionBarFragment getActionBar()
+	public ActionBarFragment getActionBarFragment()
 	{
 		if (actionBar == null)
 			actionBar = (ActionBarFragment) getSupportFragmentManager().findFragmentById(R.id.action_bar_fragment);

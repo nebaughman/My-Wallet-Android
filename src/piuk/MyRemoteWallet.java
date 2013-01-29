@@ -19,7 +19,7 @@
 package piuk;
 
 import android.util.Pair;
-import com.google.bitcoin.bouncycastle.util.encoders.Hex;
+import org.spongycastle.util.encoders.Hex;
 import com.google.bitcoin.core.*;
 import com.google.bitcoin.core.Transaction.SigHash;
 import org.apache.commons.io.IOUtils;
@@ -47,7 +47,7 @@ public class MyRemoteWallet extends MyWallet {
 	StoredBlock _multiAddrBlock;
 	long lastMultiAddress;
 
-	public boolean isAddressMine(String address) {		
+	public boolean isAddressMine(String address) {
 		for (Map<String, Object> map : this.getKeysMap()) {
 			String addr = (String) map.get("addr");
 
@@ -104,16 +104,16 @@ public class MyRemoteWallet extends MyWallet {
 
 		this._wallet = new RemoteBitcoinJWallet(params);
 
-		addKeysTobitoinJWallet(_wallet); 
+		addKeysTobitoinJWallet(_wallet);
 
-		this.temporyPassword = password; 
+		this.temporyPassword = password;
 
 		this._checksum  = new String(Hex.encode(MessageDigest.getInstance("SHA-256").digest(base64Payload.getBytes("UTF-8"))));
 
 		this._isNew = false;
 	}
 
-	private static String fetchURL(String URL) throws Exception {			
+	private static String fetchURL(String URL) throws Exception {
 		URL url = new URL(URL);
 
 		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -121,7 +121,7 @@ public class MyRemoteWallet extends MyWallet {
 		try {
 			connection.setRequestProperty("Accept", "application/json");
 			connection.setRequestProperty("charset", "utf-8");
-			connection.setRequestMethod("GET"); 
+			connection.setRequestMethod("GET");
 
 			connection.setConnectTimeout(10000);
 
@@ -141,16 +141,16 @@ public class MyRemoteWallet extends MyWallet {
 		}
 	}
 
-	private static String postURL(String request, String urlParameters) throws Exception {			
+	private static String postURL(String request, String urlParameters) throws Exception {
 
-		URL url = new URL(request); 
-		HttpURLConnection connection = (HttpURLConnection) url.openConnection();  
+		URL url = new URL(request);
+		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 		try {
 			connection.setDoOutput(true);
 			connection.setDoInput(true);
-			connection.setInstanceFollowRedirects(false); 
-			connection.setRequestMethod("POST"); 
-			connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded"); 
+			connection.setInstanceFollowRedirects(false);
+			connection.setRequestMethod("POST");
+			connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
 			connection.setRequestProperty("charset", "utf-8");
 			connection.setRequestProperty("Accept", "application/json");
 			connection.setRequestProperty("Content-Length", "" + Integer.toString(urlParameters.getBytes().length));
@@ -183,7 +183,7 @@ public class MyRemoteWallet extends MyWallet {
 
 		if (_wallet != null && success) {
 			addKeysTobitoinJWallet(_wallet);
-			_wallet.invokeOnChange();
+			_wallet.invokeOnKeyAdded(key);
 		}
 
 		return success;
@@ -247,13 +247,13 @@ public class MyRemoteWallet extends MyWallet {
 		if (transactions != null) {
 			for (Map<String, Object> transactionDict : transactions) {
 				WalletTransaction tx = MyTransaction.fromJSONDict(transactionDict);
-				
+
 				if (tx == null)
 					continue;
-				
+
 				if (newestTransaction == null)
 					newestTransaction = tx;
-				
+
 				_wallet.addWalletTransaction(tx);
 			}
 		}
@@ -282,7 +282,7 @@ public class MyRemoteWallet extends MyWallet {
 
 	public synchronized String doMultiAddr() throws Exception {
 		String url =  WebROOT + "multiaddr?active=" + StringUtils.join(getActiveAddresses(), "|")+ "&archived=" + StringUtils.join(getArchivedAddresses(), "|");
-		
+
 		String response = fetchURL(url);
 
 		parseMultiAddr(response);
@@ -312,7 +312,7 @@ public class MyRemoteWallet extends MyWallet {
 
 		new Thread() {
 			@Override
-			public void run() {		
+			public void run() {
 				List<ECKey> tempKeys = new ArrayList<ECKey>();
 
 				try {
@@ -323,7 +323,7 @@ public class MyRemoteWallet extends MyWallet {
 					List<MyTransactionOutPoint> toRemove = new ArrayList<MyTransactionOutPoint>();
 					Set<String> alreadyAskedFor = new HashSet<String>();
 
-					for (MyTransactionOutPoint output : unspent) {	
+					for (MyTransactionOutPoint output : unspent) {
 
 						BitcoinScript script = new BitcoinScript(output.getScriptBytes());
 
@@ -357,7 +357,7 @@ public class MyRemoteWallet extends MyWallet {
 					Pair<Transaction, Long> pair = makeTransaction(unspent, toAddress, amount, fee);
 
 					//Transaction cancelled
-					if (pair == null) 
+					if (pair == null)
 						return;
 
 					Transaction tx = pair.first;
@@ -370,7 +370,7 @@ public class MyRemoteWallet extends MyWallet {
 
 					progress.onProgress("Signing Inputs");
 
-					//Now sign the inputs						
+					//Now sign the inputs
 					tx.signInputs(SigHash.ALL, getBitcoinJWallet());
 
 					progress.onProgress("Broadcasting Transaction");
@@ -378,7 +378,7 @@ public class MyRemoteWallet extends MyWallet {
 					String response = pushTx(tx);
 
 					progress.onSend(tx, response);
- 
+
 				} catch (Exception e) {
 					e.printStackTrace();
 
@@ -450,7 +450,7 @@ public class MyRemoteWallet extends MyWallet {
 
 			priority += outPoint.value.longValue() * outPoint.confirmations;
 
-			if (firstOutPoint == null) 
+			if (firstOutPoint == null)
 				firstOutPoint = outPoint;
 
 			if (valueSelected.compareTo(valueNeeded) >= 0)
@@ -465,7 +465,7 @@ public class MyRemoteWallet extends MyWallet {
 		BigInteger change = valueSelected.subtract(amount).subtract(fee);
 
 		//Now add the change if there is any
-		if (change.compareTo(BigInteger.ZERO) > 0) {						
+		if (change.compareTo(BigInteger.ZERO) > 0) {
 			BitcoinScript inputScript = new BitcoinScript(firstOutPoint.getConnectedPubKeyScript());
 
 			//Return change to the first address

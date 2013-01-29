@@ -24,11 +24,11 @@ public class PairWalletActivity extends AbstractWalletActivity {
 
 		setContentView(R.layout.pair_wallet_content);
 
-		final ActionBarFragment actionBar = getActionBar();
+		final ActionBarFragment actionBar = getActionBarFragment();
 
 		actionBar.setPrimaryTitle(R.string.pair_wallet_title);
 
-		//showQRReader();	
+		//showQRReader();
 
 		actionBar.setBack(new OnClickListener()
 		{
@@ -41,7 +41,7 @@ public class PairWalletActivity extends AbstractWalletActivity {
 		final Button pairDeviceButton = (Button) getWindow().findViewById(R.id.pair_qr_button);
 
 		pairDeviceButton.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {	
+			public void onClick(View v) {
 				showQRReader();
 			}
 		});

@@ -22,7 +22,7 @@ import java.util.Arrays;
 
 import org.apache.commons.lang.ArrayUtils;
 
-import com.google.bitcoin.bouncycastle.util.encoders.Hex;
+import org.spongycastle.util.encoders.Hex;
 
 public class Hash implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -32,11 +32,11 @@ public class Hash implements Serializable {
 	public Hash(String hex) {
 		this.hash = Hex.decode(hex);
 	}
-	
+
 	public Hash(byte[] bytes) {
 		this.hash = bytes;
 	}
-	
+
 	public void reverse() {
 		ArrayUtils.reverse(hash);
 	}
@@ -47,19 +47,19 @@ public class Hash implements Serializable {
 
 	public int nLeadingZeros() {
 		int n = 0;
-		
+
 		for (byte b : hash) {
-			if (b == 0) 
+			if (b == 0)
 				n += 8;
 			else {
-				n += Math.max(0, Integer.numberOfLeadingZeros(b) - (3*8));				
+				n += Math.max(0, Integer.numberOfLeadingZeros(b) - (3*8));
 				break;
 			}
 		}
 
 		return n;
 	}
-	
+
 	public boolean isNull() {
 		if (hash == null || hash.length == 0)
 			return true;
@@ -70,21 +70,21 @@ public class Hash implements Serializable {
 
 		return true;
 	}
-	
+
 	@Override
 	public String toString() {
-		
+
 		if (hash == null)
 			return null;
-		
+
 		return new String(Hex.encode(hash));
 	}
-	
+
 	@Override
 	public int hashCode() {
 		return Arrays.hashCode(hash);
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)

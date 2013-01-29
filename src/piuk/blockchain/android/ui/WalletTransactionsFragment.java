@@ -143,7 +143,7 @@ public final class WalletTransactionsFragment extends Fragment
 		private final WalletEventListener walletEventListener = new AbstractWalletEventListener()
 		{
 			@Override
-			public void onChange(Wallet wallet)
+			public void onChange(/*Wallet wallet*/)
 			{
 				try {
 					forceLoad();
@@ -240,7 +240,7 @@ public final class WalletTransactionsFragment extends Fragment
 			this.mode = getArguments().getInt(KEY_MODE);
 
 			adapter = new ArrayAdapter<Transaction>(activity, 0){
-			
+
 				final DateFormat dateFormat = android.text.format.DateFormat.getDateFormat(activity);
 				final DateFormat timeFormat = android.text.format.DateFormat.getTimeFormat(activity);
 				final int colorSignificant = getResources().getColor(R.color.significant);
@@ -271,14 +271,14 @@ public final class WalletTransactionsFragment extends Fragment
 						}
 						else if (confidenceType == ConfidenceType.BUILDING)
 						{
-						
+
 							textColor = colorSignificant;
 						}
 						else if (confidenceType == ConfidenceType.NOT_IN_BEST_CHAIN)
 						{
 							textColor = colorSignificant;
 						}
-						else if (confidenceType == ConfidenceType.OVERRIDDEN_BY_DOUBLE_SPEND)
+						else if (confidenceType == ConfidenceType.DEAD)
 						{
 							textColor = Color.RED;
 						}
@@ -315,7 +315,7 @@ public final class WalletTransactionsFragment extends Fragment
 						rowValue.setCurrencyCode(null);
 						rowValue.setAmountSigned(true);
 						rowValue.setTextColor(textColor);
-						rowValue.setAmount(value); 
+						rowValue.setAmount(value);
 
 
 						if (sent) {
@@ -427,20 +427,20 @@ public final class WalletTransactionsFragment extends Fragment
 			try
 			{
 				final boolean sent = tx.getValue(application.getWallet()).signum() < 0;
-				
+
 				Address address = null;
 				if (sent) {
 					if (tx.getOutputs().size() == 0)
 						return;
-					
+
 					 address = tx.getOutputs().get(0).getScriptPubKey().getToAddress();
 				} else {
 					if (tx.getInputs().size() == 0)
 						return;
-					
+
 					address = tx.getInputs().get(0).getFromAddress();
 				}
-				
+
 				EditAddressBookEntryFragment.edit(getFragmentManager(), address.toString());
 			}
 			catch (final ScriptException x)

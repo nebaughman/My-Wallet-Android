@@ -61,7 +61,7 @@ public class WalletApplication extends Application
 	{
 		public void onServiceConnected(final ComponentName name, final IBinder binder) {
 			service = ((BlockchainService.LocalBinder) binder).getService();
-		} 
+		}
 
 		public void onServiceDisconnected(final ComponentName name) { }
 	};
@@ -69,7 +69,7 @@ public class WalletApplication extends Application
 	final private WalletEventListener walletEventListener = new AbstractWalletEventListener()
 	{
 		@Override
-		public void onChange(Wallet wallet)
+		public void onChange(/*Wallet wallet*/)
 		{
 			handler.post(new Runnable()
 			{
@@ -144,7 +144,7 @@ public class WalletApplication extends Application
 			Class aClass = getClass().getClassLoader().loadClass("java.net.CookieManager");
 
 	        CookieManager cookieManager = (CookieManager) aClass.newInstance();
-	        
+
 			CookieHandler.setDefault(cookieManager);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -164,7 +164,7 @@ public class WalletApplication extends Application
 				Toast.makeText(WalletApplication.this, R.string.toast_downloading_wallet, Toast.LENGTH_LONG).show();
 
 				loadRemoteWallet();
-			} 
+			}
 		}
 
 		//Otherwise wither first load or an error
@@ -192,21 +192,21 @@ public class WalletApplication extends Application
 	}
 
 	public String getPassword() {
-		return PreferenceManager.getDefaultSharedPreferences(this).getString("password", null);  
+		return PreferenceManager.getDefaultSharedPreferences(this).getString("password", null);
 	}
 
 	public String getGUID() {
-		return PreferenceManager.getDefaultSharedPreferences(this).getString("guid", null);  
+		return PreferenceManager.getDefaultSharedPreferences(this).getString("guid", null);
 	}
 
 	public String getSharedKey() {
-		return PreferenceManager.getDefaultSharedPreferences(this).getString("sharedKey", null);  
+		return PreferenceManager.getDefaultSharedPreferences(this).getString("sharedKey", null);
 	}
 
 	public void notifyWidgets()
 	{
 		final Context context = getApplicationContext();
- 
+
 		// notify widgets
 		final AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
 		for (final AppWidgetProviderInfo providerInfo : appWidgetManager.getInstalledProviders())
@@ -226,10 +226,10 @@ public class WalletApplication extends Application
 			FileInputStream multiaddrCacheFile = openFileInput(Constants.EXCEPTION_LOG);
 
 			return IOUtils.toString(multiaddrCacheFile);
-			
+
 		} catch (IOException e1) {
 			e1.printStackTrace();
-			
+
 			return null;
 		}
 	}
@@ -264,10 +264,10 @@ public class WalletApplication extends Application
 		}
 	}
 
-	public synchronized void syncWithMyWallet() {	
+	public synchronized void syncWithMyWallet() {
 
 		System.out.println("syncWithMyWallet()");
-		
+
 		//Can't sync a new wallet
 		if (remoteWallet.isNew())
 			return;
@@ -278,7 +278,7 @@ public class WalletApplication extends Application
 	public void doMultiAddr() {
 		new Thread(new Runnable() {
 			public void run() {
-				try {				
+				try {
 					writeMultiAddrCache(remoteWallet.doMultiAddr());
 
 					handler.post(new Runnable() 	{
@@ -301,11 +301,11 @@ public class WalletApplication extends Application
 		}).start();
 	}
 
-	public synchronized void loadRemoteWallet() {			
+	public synchronized void loadRemoteWallet() {
 		new Thread(new Runnable() {
 			public void run() {
-				String payload = null; 
-				
+				String payload = null;
+
 				System.out.println("loadRemoteWallet()");
 
 				//Retry 3 times
@@ -347,7 +347,7 @@ public class WalletApplication extends Application
 					}
 
 					try {
-						
+
 						if (remoteWallet == null) {
 							remoteWallet = new MyRemoteWallet(payload, getPassword());
 						} else {
@@ -356,15 +356,15 @@ public class WalletApplication extends Application
 							remoteWallet.setPayload(payload);
 						}
 
-						hasDecryptionError = false; 
-						
+						hasDecryptionError = false;
+
 						getWallet().invokeOnChange();
 
 					} catch (Exception e) {
-						hasDecryptionError = true; 
-						
+						hasDecryptionError = true;
+
 						getWallet().invokeOnChange();
-						
+
 						e.printStackTrace();
 
 						writeException(e);
@@ -418,18 +418,18 @@ public class WalletApplication extends Application
 		public void onSavedAddress(String address);
 		public void onError();
 	}
-	
+
 	public void addKeyToWallet(ECKey key, String label, int tag, final AddAddressCallback callback)
 	{
 		try {
 			remoteWallet.addKey(key, label);
-			
+
 			final String address = new BitcoinAddress(new Hash(key.getPubKeyHash()), (short) 0).toString();
-			
+
 			if (tag != 0) {
 				remoteWallet.setTag(address, tag);
 			}
-		
+
 			new Thread(){
 				@Override
 				public void run() {
@@ -441,7 +441,7 @@ public class WalletApplication extends Application
 							public void run()
 							{
 								callback.onSavedAddress(address);
-								
+
 								notifyWidgets();
 							}
 						});
@@ -456,7 +456,7 @@ public class WalletApplication extends Application
 							public void run()
 							{
 								callback.onError();
-								
+
 								Toast.makeText(WalletApplication.this, R.string.toast_error_syncing_wallet, Toast.LENGTH_LONG).show();
 							}
 						});
@@ -564,7 +564,7 @@ public class WalletApplication extends Application
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	} 
+	}
 
 	public Address determineSelectedAddress()
 	{

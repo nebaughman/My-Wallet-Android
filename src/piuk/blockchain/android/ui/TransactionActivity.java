@@ -62,7 +62,7 @@ public final class TransactionActivity extends AbstractWalletActivity
 		final Intent intent = new Intent(context, TransactionActivity.class);
 		// use Bitcoin serialization, because Java serialization runs out of stack on some transactions
 		intent.putExtra(TransactionActivity.INTENT_EXTRA_TRANSACTION, tx);
-		
+
 		context.startActivity(intent);
 	}
 
@@ -75,7 +75,7 @@ public final class TransactionActivity extends AbstractWalletActivity
 
 		setContentView(R.layout.transaction_content);
 
-		final ActionBarFragment actionBar = getActionBar();
+		final ActionBarFragment actionBar = getActionBarFragment();
 
 		actionBar.setPrimaryTitle(R.string.transaction_activity_title);
 
@@ -109,9 +109,9 @@ public final class TransactionActivity extends AbstractWalletActivity
 
 	private void handleIntent(final Intent intent)
 	{
-		
+
 		System.out.println("Handle Intent");
-		
+
 		final Uri intentUri = intent.getData();
 		final String scheme = intentUri != null ? intentUri.getScheme() : null;
 
@@ -120,7 +120,7 @@ public final class TransactionActivity extends AbstractWalletActivity
 			tx = (Transaction) intent.getSerializableExtra(INTENT_EXTRA_TRANSACTION);
 		}
 		else if (intentUri != null && "btctx".equals(scheme))
-		{ 
+		{
 			try
 			{
 				// decode transaction URI

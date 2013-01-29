@@ -79,7 +79,7 @@ public final class SendCoinsActivity extends AbstractWalletActivity
 
 		setContentView(R.layout.send_coins_content);
 
-		final ActionBarFragment actionBar = getActionBar();
+		final ActionBarFragment actionBar = getActionBarFragment();
 
 		actionBar.setPrimaryTitle(R.string.send_coins_activity_title);
 
@@ -154,26 +154,26 @@ public final class SendCoinsActivity extends AbstractWalletActivity
 				if (scanPrivateKeyAddress != null) {
 
 					try {
-						
+
 						byte[] privBytes = Base58.decode(contents);
-												
+
 						//Prppend a zero byte to make the biginteger unsigned
 						byte[] appendZeroByte = ArrayUtils.addAll(new byte[1], privBytes);
 
 						ECKey ecKey = new ECKey(new BigInteger(appendZeroByte));
-						
+
 						if (ecKey.toAddress(Constants.NETWORK_PARAMETERS).toString().equals(scanPrivateKeyAddress)) {
 							temporaryPrivateKeys.put(scanPrivateKeyAddress, ecKey);
-						} else {							
+						} else {
 							longToast(getString(R.string.wrong_private_key, ecKey.toAddress(Constants.NETWORK_PARAMETERS).toString()));
 						}
-						
+
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
 
 				} else {
-					updateSendCoinsFragment(contents, null);					
+					updateSendCoinsFragment(contents, null);
 				}
 			}
 			else
@@ -190,15 +190,15 @@ public final class SendCoinsActivity extends AbstractWalletActivity
 					catch (final BitcoinURIParseException x)
 					{
 						errorDialog(R.string.send_coins_uri_parse_error_title, contents);
-					} 
+					}
 				}
 		}
-		
+
 
 		synchronized (temporaryPrivateKeys) {
 			temporaryPrivateKeys.notify();
 		}
-		
+
 		scanPrivateKeyAddress = null;
 	}
 

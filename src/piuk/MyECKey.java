@@ -18,7 +18,7 @@ public class MyECKey extends ECKey {
 	private String label;
 	private MyWallet wallet;
 	private ECKey _key;
-	
+
 	public int getTag() {
 		return tag;
 	}
@@ -100,4 +100,9 @@ public class MyECKey extends ECKey {
 
 		return null;
 	}
+
+    @Override
+    public int hashCode() {
+        return getInternalKey().hashCode();
+    }
 }

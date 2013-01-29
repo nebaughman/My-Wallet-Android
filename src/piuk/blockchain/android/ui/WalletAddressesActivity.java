@@ -79,18 +79,18 @@ public final class WalletAddressesActivity extends AbstractWalletActivity
 	@Override
 	protected void onResume() {
 		super.onResume();
-		
+
 		getWalletApplication().connect();
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
-		
+
 		getWalletApplication().diconnectSoon();
 	}
 
-	
+
 	@Override
 	protected void onCreate(final Bundle savedInstanceState)
 	{
@@ -98,7 +98,7 @@ public final class WalletAddressesActivity extends AbstractWalletActivity
 
 		setContentView(R.layout.address_book_content);
 
-		final ActionBarFragment actionBar = getActionBar();
+		final ActionBarFragment actionBar = getActionBarFragment();
 
 		actionBar.setPrimaryTitle(R.string.address_book_activity_title);
 
@@ -121,11 +121,11 @@ public final class WalletAddressesActivity extends AbstractWalletActivity
 				@Override
 				public void onPageSelected(final int position)
 				{
-					
+
 					super.onPageSelected(position);
-				
+
 					if (position == 0)
-					{	
+					{
 						if (scanButton != null)
 						{
 							actionBar.removeButton(scanButton);
@@ -189,7 +189,7 @@ public final class WalletAddressesActivity extends AbstractWalletActivity
 			final PagerAdapter pagerAdapter = new PagerAdapter(getSupportFragmentManager());
 
 			pager.getCurrentItem();
-			
+
 			pager.setAdapter(pagerAdapter);
 			pager.setOnPageChangeListener(pagerListener);
 			final int position = getIntent().getBooleanExtra(EXTRA_SENDING, true) == true ? 2 : 0;
@@ -204,6 +204,7 @@ public final class WalletAddressesActivity extends AbstractWalletActivity
 			activeAddressesFragment = new WalletActiveAddressesFragment(0, pager);
 			sendingAddressesFragment = new SendingAddressesFragment();
 		}
+		/*
 		else
 		{
 			scanButton = actionBar.addButton(R.drawable.ic_action_qr);
@@ -219,6 +220,7 @@ public final class WalletAddressesActivity extends AbstractWalletActivity
 			archivedAddressesFragment = (WalletArchivedAddressesFragment) getSupportFragmentManager().findFragmentById(R.id.wallet_archived_fragment);
 			sendingAddressesFragment = (SendingAddressesFragment) getSupportFragmentManager().findFragmentById(R.id.sending_addresses_fragment);
 		}
+		*/
 
 		updateFragments();
 	}
@@ -368,17 +370,17 @@ public final class WalletAddressesActivity extends AbstractWalletActivity
 
 			public void onSavedAddress(String address) {
 				System.out.println("Generated Address " + address);
-				
+
 				updateFragments();
 			}
 			public void onError() {
 				System.out.println("Generate Address Failed");
 
 				updateFragments();
-			}	
+			}
 		});
 	}
-	
+
 	private void handleAddAddress()
 	{
 		new AlertDialog.Builder(WalletAddressesActivity.this).setTitle(R.string.wallet_addresses_fragment_add_dialog_title)
@@ -388,10 +390,10 @@ public final class WalletAddressesActivity extends AbstractWalletActivity
 					public void onClick(final DialogInterface dialog, final int which)
 					{
 						MyRemoteWallet remoteWallet = getWalletApplication().getRemoteWallet();
-						
+
 						if (remoteWallet.isDoubleEncrypted() == false) {
 							System.out.println("Not double encrypted");
-							
+
 							reallyGenerateAddress();
 						} else {
 							if (remoteWallet.temporySecondPassword == null) {
@@ -403,7 +405,7 @@ public final class WalletAddressesActivity extends AbstractWalletActivity
 
 									public void onFail() {
 										Toast.makeText(getApplication(), R.string.generate_key_no_password_error, Toast.LENGTH_LONG).show();
-									} 
+									}
 								});
 							} else {
 								System.out.println("Password Set");
@@ -411,7 +413,7 @@ public final class WalletAddressesActivity extends AbstractWalletActivity
 								reallyGenerateAddress();
 							}
 						}
-						
+
 						updateFragments();
 					}
 				}).setNegativeButton(R.string.button_cancel, null).show();

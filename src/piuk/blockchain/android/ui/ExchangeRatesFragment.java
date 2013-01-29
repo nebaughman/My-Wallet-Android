@@ -57,7 +57,7 @@ public final class ExchangeRatesFragment extends ListFragment implements LoaderM
 	private final WalletEventListener walletEventListener = new AbstractWalletEventListener()
 	{
 		@Override
-		public void onChange(Wallet wallet)
+		public void onChange(/*Wallet wallet*/)
 		{
 
 			try {

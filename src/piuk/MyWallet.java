@@ -19,7 +19,7 @@
 package piuk;
 
 import android.util.Base64;
-import com.google.bitcoin.bouncycastle.util.encoders.Hex;
+import org.spongycastle.util.encoders.Hex;
 import com.google.bitcoin.core.Base58;
 import com.google.bitcoin.core.ECKey;
 import com.google.bitcoin.core.NetworkParameters;
@@ -57,7 +57,7 @@ public class MyWallet {
 			throw new Exception("Error Decrypting Wallet");
 	}
 
-	//Create a new Wallet 
+	//Create a new Wallet
 	public MyWallet() throws Exception {
 		this.root = new HashMap<String, Object>();
 
@@ -83,10 +83,10 @@ public class MyWallet {
 		for (Map<String, Object> map : getKeysMap()) {
 			if (map.get("tag") == null || (Long)map.get("tag") == 0)
 				list.add((String) map.get("addr"));
-		} 
+		}
 		return list.toArray(new String[list.size()]);
 	}
-	
+
 	public String[] getArchivedAddresses() {
 		List<String> list = new ArrayList<String>();
 		for (Map<String, Object> map : getKeysMap()) {
@@ -145,7 +145,7 @@ public class MyWallet {
 				throw new Exception("You must provide a second password");
 
 			base58Priv = decryptPK(base58Priv, getSharedKey(), this.temporySecondPassword);
-		} 
+		}
 
 		byte[] privBytes = Base58.decode(base58Priv);
 
@@ -218,7 +218,7 @@ public class MyWallet {
 			findKey(address).put("tag", tag);
 		}
 	}
-	
+
 	public void addLabel(String address, String label) {
 		if (this.isMine(address)) {
 			findKey(address).put("label", label);
@@ -409,12 +409,12 @@ public class MyWallet {
 			return null;
 
 		JSONParser parser = new JSONParser();
-       
+
 		try {
 			return (Map<String, Object>) parser.parse(decrypted);
 		} catch (Exception e) {
 			System.out.println(decrypted);
-			
+
 			throw e;
 		}
 	}

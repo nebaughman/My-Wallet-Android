@@ -44,7 +44,7 @@
 
 	<string name="ask_for_fee">This transaction is low priority it is recommended you include a 0.005 BTC miners fee. Would you like to add this fee now?</string>
 	<string name="ask_for_private_key">This transaction requires the private key for Bitcoin address %s. Would you like to scan it from a paper wallet?</string>
-	
+
 	<string name="error_setting_label">Error setting address label</string>
 
 	<string name="new_account_title">New account</string>
@@ -83,6 +83,7 @@
 	<string name="wallet_addresses_fragment_add_dialog_positive">Add address</string>
 	<string name="wallet_balance_fragment_local_value">worth about %1$s %2$s</string>
 	<string name="exchange_rates_fragment_empty_text">Could not load exchange rates</string>
+	<string name="exchange_rates_activity_title">Exchange Rates</string>
 	<string name="wallet_transactions_fragment_tab_received">Received</string>
 	<string name="wallet_transactions_fragment_tab_all">Both</string>
 	<string name="wallet_transactions_fragment_tab_sent">Sent</string>
@@ -130,7 +131,7 @@
 	<string name="send_coins_fragment_button_back">Back</string>
 	<string name="send_coins_fragment_need_btc">Need Bitcoins?</string>
 	<string name="send_coins_fragment_instant_deposit">Instant Deposit</string>
-	
+
 	<string name="send_coins_sending_msg">Sending…</string>
 	<string name="send_coins_sent_msg">Sent!</string>
 	<string name="send_coins_add_address_dialog_title">The recipient is not yet contained in your address
@@ -145,6 +146,8 @@
 	<string name="request_coins_fragment_nfc_enabled">Or touch with NFC enabled device.</string>
 	<string name="request_coins_clipboard_msg">Bitcoin request copied to clipboard</string>
 	<string name="request_coins_share_dialog_title">Share request for Bitcoins…</string>
+	<string name="request_coins_address_copied_to_clipboard">Bitcoin address copied to Clipboard</string>
+	<string name="request_coins_address_label">(Touch to copy to Clipboard)</string>
 
 	<string name="address_book_activity_title">Address Book</string>
 	<string name="address_book_list_receiving_title">Active addresses</string>
@@ -172,7 +175,7 @@
 	<string name="should_not_be_here">You should not be here. This is a bug</string>
 	<string name="pair_wallet_title">Pair Wallet.</string>
 	<string name="pair_wallet_button">Scan QR Code.</string>
-	
+
 	<string name="pair_wallet_step1">Step 1.</string>
 	<string name="pair_wallet_step1_content">Login to your My Wallet account on your PC or Mac.
 	</string>
@@ -234,7 +237,7 @@
 	<string name="notification_peers_connected_msg">%d peers connected</string>
 
 	<!-- generic buttons -->
-	<string name="button_dismiss">Dismiss</string> 
+	<string name="button_dismiss">Dismiss</string>
 	<string name="button_cancel">Cancel</string>
 
 </resources>

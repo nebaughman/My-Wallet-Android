@@ -40,20 +40,15 @@
 				android:foreground="@drawable/title_bar_shadow_light"
 				android:foregroundGravity="top|fill_horizontal" >
 
-				<fragment
-					android:id="@+id/wallet_transactions_fragment"
-					android:name="piuk.blockchain.android.ui.WalletTransactionsFragment"
-					android:layout_width="fill_parent"
-					android:layout_height="fill_parent"
-					android:layout_gravity="bottom|center_horizontal" />
+                    <fragment
+                        android:id="@+id/wallet_transactions_fragment"
+                        android:name="piuk.blockchain.android.ui.WalletTransactionsFragment"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content" />
 
-				<fragment
-					android:id="@+id/exchange_rates_fragment"
-					android:name="piuk.blockchain.android.ui.ExchangeRatesFragment"
-					android:layout_width="fill_parent"
-					android:layout_height="fill_parent" />
 			</FrameLayout>
 		</LinearLayout>
 	</FrameLayout>
+
 
 </LinearLayout>

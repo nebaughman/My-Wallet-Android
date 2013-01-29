@@ -109,6 +109,12 @@
             </intent-filter>
         </activity>
         <activity
+            android:name="piuk.blockchain.android.ui.ExchangeRatesActivity"
+            android:configChanges="orientation|keyboard|keyboardHidden"
+            android:screenOrientation="behind"
+            android:theme="@android:style/Theme.Light.NoTitleBar" >
+        </activity>
+        <activity
             android:name=".android.ui.WalletAddressesActivity"
             android:configChanges="orientation|keyboard|keyboardHidden"
             android:screenOrientation="behind"

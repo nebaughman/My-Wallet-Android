@@ -24,13 +24,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.json.simple.JSONValue;
 
 import piuk.blockchain.android.Constants;
 
 
-import com.google.bitcoin.bouncycastle.util.encoders.Hex;
+import org.spongycastle.util.encoders.Hex;
 import com.google.bitcoin.core.AbstractWalletEventListener;
 import com.google.bitcoin.core.Block;
 import com.google.bitcoin.core.BlockChain;
@@ -87,7 +88,7 @@ public class MyBlockChain extends BlockChain implements WebSocketEventHandler {
 		}
 	}
 
-	public Set<PeerEventListener> listeners = new ConcurrentSkipListSet<PeerEventListener>();
+	private final Set<PeerEventListener> listeners = new CopyOnWriteArraySet<PeerEventListener>();
 
 	@Override
 	public int getBestChainHeight() {
@@ -106,7 +107,7 @@ public class MyBlockChain extends BlockChain implements WebSocketEventHandler {
 	final private WalletEventListener walletEventListener = new AbstractWalletEventListener()
 	{
 		@Override
-		public void onChange(Wallet wallet)
+		public void onChange(/*Wallet wallet*/)
 		{
 			try {
 				if (remoteWallet._multiAddrBlock != null) {
@@ -148,7 +149,7 @@ public class MyBlockChain extends BlockChain implements WebSocketEventHandler {
 		try {
 			String message = "{\"op\":\"blocks_sub\"}{\"op\":\"wallet_sub\",\"guid\":\""+remoteWallet.getGUID()+"\"}";
 
-			for (Map<String, Object> key : this.remoteWallet.getKeysMap()) {				
+			for (Map<String, Object> key : this.remoteWallet.getKeysMap()) {
 				message += "{\"op\":\"addr_sub\", \"addr\":\""+key.get("addr")+"\"}";
 			}
 
@@ -266,7 +267,7 @@ public class MyBlockChain extends BlockChain implements WebSocketEventHandler {
 
 						if (tx.txIndex == txIndex.intValue() && confidence.height != blockHeight) {
 							confidence.height = blockHeight;
-							confidence.runListeners(); 
+							confidence.runListeners();
 						}
 					}
 				}
@@ -326,18 +327,18 @@ public class MyBlockChain extends BlockChain implements WebSocketEventHandler {
 				String oldChecksum = remoteWallet.getChecksum();
 
 				System.out.println("On change " + newChecksum + " " + oldChecksum);
-				
+
 				if (!newChecksum.equals(oldChecksum)) {
 					try {
 						String newPayload = MyRemoteWallet.getWalletPayload(remoteWallet.getGUID(), remoteWallet.getSharedKey(), oldChecksum);
 
-						if (newPayload == null) 
+						if (newPayload == null)
 							return;
-						
+
 						remoteWallet.setPayload(newPayload);
-						
+
 						remoteWallet.getBitcoinJWallet().invokeOnChange();
-						
+
 					} catch (Exception e) {
 						e.printStackTrace();
 					}

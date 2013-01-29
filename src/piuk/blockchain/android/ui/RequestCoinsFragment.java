@@ -28,11 +28,14 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.text.ClipboardManager;
+import android.content.ClipData;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.bitcoin.core.Address;
 import com.google.bitcoin.uri.BitcoinURI;
@@ -54,6 +57,7 @@ public final class RequestCoinsFragment extends Fragment
 	private WalletApplication application;
 	private Object nfcManager;
 
+	private TextView addressView;
 	private ImageView qrView;
 	private Bitmap qrCodeBitmap;
 	private CurrencyAmountView amountView;
@@ -67,6 +71,27 @@ public final class RequestCoinsFragment extends Fragment
 		application = (WalletApplication) getActivity().getApplication();
 
 		final View view = inflater.inflate(R.layout.request_coins_fragment, container);
+
+		addressView = (TextView) view.findViewById(R.id.request_coins_address);
+		addressView.setOnClickListener(new OnClickListener()
+        {
+            public void onClick(final View v)
+            {
+                Address address = application.determineSelectedAddress();
+
+                if (address != null)
+                {
+                    ClipboardManager clipboard = (ClipboardManager)getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+                    //ClipData clip = ClipData.newPlainText("Bitcoin Address", address.toString());
+                    //clipboard.setPrimaryClip(clip);
+                    clipboard.setText(address.toString()); // compatibility with API 10 (deprecated in API 11)
+
+                    Toast.makeText(getActivity(),
+                        R.string.request_coins_address_copied_to_clipboard,
+                        Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
 		qrView = (ImageView) view.findViewById(R.id.request_coins_qr);
 		qrView.setOnClickListener(new OnClickListener()
@@ -107,7 +132,7 @@ public final class RequestCoinsFragment extends Fragment
 				});
 				newFragment.show(ft, AmountCalculatorFragment.FRAGMENT_TAG);
 			}
-		}); 
+		});
 
 		nfcEnabledView = view.findViewById(R.id.request_coins_fragment_nfc_enabled);
 
@@ -119,7 +144,7 @@ public final class RequestCoinsFragment extends Fragment
 	{
 		super.onAttach(activity);
 
-		final ActionBarFragment actionBar = ((AbstractWalletActivity) activity).getActionBar();
+		final ActionBarFragment actionBar = ((AbstractWalletActivity) activity).getActionBarFragment();
 
 		actionBar.addButton(R.drawable.ic_action_share).setOnClickListener(new OnClickListener()
 		{
@@ -129,22 +154,22 @@ public final class RequestCoinsFragment extends Fragment
 						new Intent(Intent.ACTION_SEND).putExtra(Intent.EXTRA_TEXT, determineAddressStr()).setType("text/plain"), getActivity()
 								.getString(R.string.request_coins_share_dialog_title)));
 			}
-		}); 
+		});
 
 		actionBar.addButton(R.drawable.icon_piggy_bank).setOnClickListener(new OnClickListener()
 		{
 			public void onClick(final View v)
 			{
-				
+
 				WalletAddressesActivity.start(getActivity(), true);
 
 				/*
 				final ClipboardManager clipboardManager = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
 				final String addressStr = determineAddressStr();
-				
+
 				if (addressStr == null)
 					return;
-				
+
 				clipboardManager.setText(addressStr);
 				((AbstractWalletActivity) getActivity()).toast(R.string.request_coins_clipboard_msg);
 
@@ -176,7 +201,7 @@ public final class RequestCoinsFragment extends Fragment
 
 		if (addressStr == null)
 			return;
-	
+
 		if (qrCodeBitmap != null)
 			qrCodeBitmap.recycle();
 
@@ -190,15 +215,25 @@ public final class RequestCoinsFragment extends Fragment
 			if (success)
 				nfcEnabledView.setVisibility(View.VISIBLE);
 		}
+
+		Address address = application.determineSelectedAddress();
+		if (address != null)
+		{
+		    addressView.setText(address.toString());
+		}
+		else
+		{
+		    addressView.setText("");
+		}
 	}
 
 	private String determineAddressStr()
 	{
 		final Address address = application.determineSelectedAddress();
-		
+
 		if (address == null)
 			return null;
-		
+
 		final BigInteger amount = amountView.getAmount();
 
 		return BitcoinURI.convertToBitcoinURI(address, amount, null, null).toString();

@@ -69,15 +69,20 @@ public class WalletAddressesFragment extends ListFragment
 	private int tag_filter = 0;
 	private AbstractWalletEventListener eventListener = null;
 	private ViewPager pagerView;
-	
+
+	public WalletAddressesFragment()
+	{
+	}
+
 	public WalletAddressesFragment(int tag_filter, ViewPager pagerView) {
 		super();
-		
+
 		this.tag_filter = tag_filter;
 		this.pagerView = pagerView;
-		
+
 		eventListener = new AbstractWalletEventListener() {
-			public void onChange(Wallet arg0) {
+		    @Override
+			public void onChange(/*Wallet arg0*/) {
 				try {
 					updateView();
 				} catch (Exception e) {
@@ -86,21 +91,21 @@ public class WalletAddressesFragment extends ListFragment
 			}
 		};
 	}
-	
+
 	public void setKeys() {
 		@SuppressWarnings("unchecked")
 		List<ECKey> keys = (List<ECKey>) application.getWallet().keychain.clone();
-		
+
 		this.keys = new ArrayList<ECKey>(keys.size());
-		
+
 		for (ECKey key : keys) {
 			MyECKey myKey = (MyECKey) key;
-			
+
 			if (myKey.getTag() == tag_filter)
 				this.keys.add(key);
 		}
 	}
-	
+
 	@Override
 	public void onCreate(final Bundle savedInstanceState)
 	{
@@ -124,21 +129,21 @@ public class WalletAddressesFragment extends ListFragment
 	public void onHide() {
 		this.unregisterForContextMenu(getListView());
 	}
-	
+
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
 	}
-	
+
 	@Override
 	public void onResume()
 	{
 		super.onResume();
 
 		application.getWallet().addEventListener(eventListener);
-		
+
 		activity.getContentResolver().registerContentObserver(AddressBookProvider.CONTENT_URI, true, contentObserver);
-		
+
 		updateView();
 	}
 
@@ -155,9 +160,9 @@ public class WalletAddressesFragment extends ListFragment
 	@Override
 	public void onListItemClick(final ListView l, final View v, final int position, final long id)
 	{
-		
+
 		System.out.println("Clicked " + tag_filter);
-		
+
 		final ECKey key = keys.get(position);
 		final Address address = key.toAddress(Constants.NETWORK_PARAMETERS);
 
@@ -179,7 +184,7 @@ public class WalletAddressesFragment extends ListFragment
 			return false;
 		else if (pagerView.getCurrentItem() == 1 && tag_filter == 0)
 			return false;
-		
+
 		final AdapterContextMenuInfo menuInfo = (AdapterContextMenuInfo) item.getMenuInfo();
 
 		final ECKey key = (ECKey) getListView().getAdapter().getItem(menuInfo.position);
@@ -237,13 +242,13 @@ public class WalletAddressesFragment extends ListFragment
 
 	private void updateView()
 	{
-		
+
 		System.out.println("Set Keys");
-		
+
 		setKeys();
 
 		final ListAdapter adapter = getListAdapter();
-		
+
 		if (adapter != null)
 			((BaseAdapter) adapter).notifyDataSetChanged();
 	}
@@ -310,7 +315,7 @@ public class WalletAddressesFragment extends ListFragment
 			try {
 				handler.post(new Runnable() {
 					public void run() {
-						updateView();		
+						updateView();
 					}
 				});
 			} catch (Exception e) {
