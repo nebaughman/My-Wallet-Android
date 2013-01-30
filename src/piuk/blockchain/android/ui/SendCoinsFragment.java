@@ -74,7 +74,7 @@ public final class SendCoinsFragment extends Fragment
 	private CurrencyAmountView amountView;
 	private Button viewGo;
 	private Button viewCancel;
-	
+
 	private State state = State.INPUT;
 
 	private enum State
@@ -133,21 +133,21 @@ public final class SendCoinsFragment extends Fragment
 		final BigInteger estimated = application.getWallet().getBalance(BalanceType.ESTIMATED);
 		final BigInteger available = application.getWallet().getBalance(BalanceType.AVAILABLE);
 		final BigInteger pending = estimated.subtract(available);
-		
+
 		Button instantDepositButton = (Button) view.findViewById(R.id.instant_deposit);
-		
+
 		instantDepositButton.setOnClickListener(new OnClickListener() {
 			public void onClick(final View v) {
 				WalletApplication application = (WalletApplication) activity.getApplication();
-				
+
 				//Don't allow deposits into new wallets
 				if (application.getRemoteWallet().isNew())
 					return;
-				
+
 				ECKey key = application.getWallet().keychain.get(0);
-				
+
 				Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://blockchain.info/deposit?address="+key.toAddress(Constants.NETWORK_PARAMETERS)));
-				
+
 				startActivity(browserIntent);
 			}
 		});
@@ -189,21 +189,21 @@ public final class SendCoinsFragment extends Fragment
 
 		viewGo = (Button) view.findViewById(R.id.send_coins_go);
 		viewGo.setOnClickListener(new OnClickListener()
-		{			
+		{
 			final SendProgress progress = new SendProgress() {
-				public void onSend(final Transaction tx, final String message) {						
+				public void onSend(final Transaction tx, final String message) {
 					handler.post(new Runnable() {
 						public void run() {
 							state = State.SENT;
 
 							activity.longToast(message);
-						
+
 							Intent intent = activity.getIntent();
 							intent.putExtra("tx", tx.getHash());
 							activity.setResult(Activity.RESULT_OK, intent);
-							
+
 							activity.finish();
-						
+
 							updateView();
 						}
 					});
@@ -222,7 +222,7 @@ public final class SendCoinsFragment extends Fragment
 						public void run() {
 
 							System.out.println("On Error");
-							
+
 							if (message != null)
 								activity.longToast(message);
 
@@ -230,22 +230,22 @@ public final class SendCoinsFragment extends Fragment
 
 							updateView();
 						}
-					});							
-				} 
+					});
+				}
 
 				public void onProgress(final String message) {
 					handler.post(new Runnable() {
 						public void run() {
 							state = State.SENDING;
-							
+
 							updateView();
-						} 
+						}
 					});
 				}
 
-				public boolean onReady(Transaction tx, BigInteger fee, long priority) {			
-										
-					if ((priority < 57600000L || tx.bitcoinSerialize().length > 1024) && fee.compareTo(BigInteger.ZERO) == 0) {		
+				public boolean onReady(Transaction tx, BigInteger fee, long priority) {
+
+					if (fee.compareTo(BigInteger.ZERO) == 0 && (priority < 57600000L || tx.bitcoinSerialize().length > 1024 || amountView.getAmount().compareTo(Constants.FEE_THRESHOLD_MIN) < 0)) {
 
 						handler.post(new Runnable() {
 							public void run() {
@@ -253,7 +253,7 @@ public final class SendCoinsFragment extends Fragment
 								builder.setMessage(R.string.ask_for_fee)
 								.setCancelable(false)
 								.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-									public void onClick(DialogInterface dialog, int id) {																						
+									public void onClick(DialogInterface dialog, int id) {
 										makeTransaction(true);
 									}
 								})
@@ -262,60 +262,60 @@ public final class SendCoinsFragment extends Fragment
 										dialog.cancel();
 									}
 								});
-								
+
 								AlertDialog alert = builder.create();
-								
-								alert.show(); 
+
+								alert.show();
 							}
 						});
-						
+
 						handler.post(new Runnable() {
 							public void run() {
 								state = State.INPUT;
 								updateView();
 							}
 						});
-						
+
 						return false;
 					}
 
 					return true;
 				}
 
-				
+
 				public ECKey onPrivateKeyMissing(final String address) {
-					
+
 					System.out.println("onPrivateKeyMissing()");
-					
+
 					handler.post(new Runnable() {
 						public void run() {
 							AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 							builder.setMessage(getString(R.string.ask_for_private_key, address))
 							.setCancelable(false)
 							.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog, int id) {		
+								public void onClick(DialogInterface dialog, int id) {
 									activity.scanPrivateKeyAddress = address;
-									
+
 									activity.showQRReader();
 								}
 							})
 							.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog, int id) {
-									
+
 									synchronized (activity.temporaryPrivateKeys) {
 										activity.temporaryPrivateKeys.notify();
 									}
-									
+
 									dialog.cancel();
 								}
 							});
-							
+
 							AlertDialog alert = builder.create();
-							
+
 							alert.show();
 						}
 					});
-					
+
 					try {
 						synchronized (activity.temporaryPrivateKeys) {
 							activity.temporaryPrivateKeys.wait();
@@ -323,7 +323,7 @@ public final class SendCoinsFragment extends Fragment
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
-					
+
 					return activity.temporaryPrivateKeys.get(address);
 				}
 			};
@@ -331,24 +331,24 @@ public final class SendCoinsFragment extends Fragment
 			public void send(Address receivingAddress, BigInteger fee) {
 				final BigInteger amount = amountView.getAmount();
 				final WalletApplication application = (WalletApplication) getActivity().getApplication();
-				
+
 				application.getRemoteWallet().sendCoinsAsync(receivingAddress.toString(), amount, fee, progress);
 			}
-			
+
 			public void makeTransaction(boolean forceFee) {
 				try {
-					final BigInteger fee = forceFee ? BigInteger.valueOf(500000) : BigInteger.ZERO;
+					final BigInteger fee = forceFee ? Constants.DEFAULT_TX_FEE : BigInteger.ZERO;
 
 					String addressString = receivingAddressView.getText().toString().trim();
-					
+
 					try {
 						Address receivingAddress = new Address(Constants.NETWORK_PARAMETERS, addressString);
-						
+
 						send(receivingAddress, fee);
 					} catch (AddressFormatException e) {
 
 						if (isValidEmail(addressString)) {
-							
+
 							//Generate a new Archived Address
 							application.addKeyToWallet(new ECKey(), "Sent To " + addressString, 2, new AddAddressCallback() {
 								public void onSavedAddress(String address) {
@@ -356,15 +356,15 @@ public final class SendCoinsFragment extends Fragment
 										send(new Address(Constants.NETWORK_PARAMETERS, address), fee);
 									} catch (AddressFormatException e) {
 										e.printStackTrace();
-									} 
+									}
 								}
 								public void onError() {
 									System.out.println("Generate Address Failed");
-								}	
+								}
 							});
 						}
 					}
-					
+
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -372,7 +372,7 @@ public final class SendCoinsFragment extends Fragment
 
 			public void onClick(final View v)
 			{
-								
+
 				MyRemoteWallet remoteWallet = application.getRemoteWallet();
 
 				if (remoteWallet.isDoubleEncrypted() == false) {
@@ -387,7 +387,7 @@ public final class SendCoinsFragment extends Fragment
 
 							public void onFail() {
 								Toast.makeText(application, R.string.send_no_password_error, Toast.LENGTH_LONG).show();
-							} 
+							}
 						});
 					} else {
 						makeTransaction(false);
@@ -478,7 +478,7 @@ public final class SendCoinsFragment extends Fragment
 	private boolean isValidEmail(String email) {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
 	}
-	
+
 	private void updateView()
 	{
 		//0 = invalid, 1 = bitcoin, 2 = email

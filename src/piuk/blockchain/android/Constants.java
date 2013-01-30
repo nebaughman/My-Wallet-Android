@@ -38,15 +38,15 @@ public class Constants
 
 	static final String LOCAL_WALLET_FILENAME = "wallet.backup.aes.json";
 	static final String WALLET_FILENAME = "wallet.aes.json";
-	
+
 	static final String MULTIADDR_FILENAME = "multiaddr.cache.json";
-	
+
 	static final String EXCEPTION_LOG = "exception.log";
 
 	static final boolean isAmazon = true;
 
 	public final static long MultiAddrTimeThreshold =  60000; //1 minute
-	
+
 	private static final String WALLET_KEY_BACKUP_BASE58_PROD = "key-backup-base58";
 	private static final String WALLET_KEY_BACKUP_BASE58_TEST = "key-backup-base58-testnet";
 	public static final String WALLET_KEY_BACKUP_BASE58 = Constants.TEST ? WALLET_KEY_BACKUP_BASE58_TEST : WALLET_KEY_BACKUP_BASE58_PROD;
@@ -129,5 +129,6 @@ public class Constants
 	public static final String PREFS_KEY_TRUSTED_PEER = "trusted_peer";
 	public static final String PREFS_KEY_INITIATE_RESET = "initiate_reset";
 
-	public static final BigInteger DEFAULT_TX_FEE = Utils.CENT.divide(BigInteger.valueOf(20));
+	public static final BigInteger DEFAULT_TX_FEE = Utils.toNanoCoins("0.005");
+	public static final BigInteger FEE_THRESHOLD_MIN = Utils.toNanoCoins("0.01");
 }
