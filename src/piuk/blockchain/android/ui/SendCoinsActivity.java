@@ -230,8 +230,16 @@ public final class SendCoinsActivity extends AbstractWalletActivity
 			try
 			{
 				final BitcoinURI bitcoinUri = new BitcoinURI(intent.getStringExtra(INTENT_EXTRA_QUERY));
-				address = bitcoinUri.getAddress().toString();
-				amount = bitcoinUri.getAmount();
+				if (bitcoinUri.getAddress() == null)
+				{
+				    address = null;
+				    amount = null;
+				}
+				else
+				{
+                    address = bitcoinUri.getAddress().toString();
+                    amount = bitcoinUri.getAmount();
+                }
 			}
 			catch (final BitcoinURIParseException x)
 			{
