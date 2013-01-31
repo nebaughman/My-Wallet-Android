@@ -1,2 +1,0 @@
-#!/bin/sh
-mvn -q exec:java -Dexec.mainClass=com.google.bitcoin.tools.WalletTool -Dexec.args="$*"
