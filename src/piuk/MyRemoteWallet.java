@@ -529,28 +529,56 @@ public class MyRemoteWallet extends MyWallet {
 
 	public synchronized boolean remoteSave(String kaptcha) throws Exception {
 
-		String payload = this.getPayload();
+        String payload = this.getPayload();
 
-		this._checksum  = new String(Hex.encode(MessageDigest.getInstance("SHA-256").digest(payload.getBytes("UTF-8"))));
+        String old_checksum = this._checksum;
+        this._checksum  = new String(Hex.encode(MessageDigest.getInstance("SHA-256").digest(payload.getBytes("UTF-8"))));
 
-		String method = _isNew ? "insert" : "update";
+        String method = _isNew ? "insert" : "update";
 
-		if (!_isNew) {
-			System.out.println("Not new");
-		}
+        if (!_isNew)
+        {
+            System.out.println("Not new");
+        }
 
-		if (kaptcha == null && _isNew)
-			throw new Exception("Must provide a change to insert wallet");
-		else if (kaptcha == null)
-			kaptcha = "";
+        if (kaptcha == null && _isNew)
+        {
+            throw new Exception("Must provide a change to insert wallet");
+        }
+        else if (kaptcha == null)
+        {
+            kaptcha = "";
+        }
 
-		String urlEncodedPayload = URLEncoder.encode(payload);
+        String urlEncodedPayload = URLEncoder.encode(payload);
 
-		postURL(WebROOT + "wallet", "guid="+URLEncoder.encode(this.getGUID(), "utf-8")+"&sharedKey="+URLEncoder.encode(this.getSharedKey(), "utf-8")+"&payload="+urlEncodedPayload+"&method="+method+"&length="+(payload.length())+"&checksum="+URLEncoder.encode(_checksum, "utf-8")+"&kaptcha="+kaptcha);
+        StringBuilder args = new StringBuilder();
+        args.append("guid=");
+        args.append(URLEncoder.encode(this.getGUID(), "utf-8"));
+        args.append("&sharedKey=");
+        args.append(URLEncoder.encode(this.getSharedKey(), "utf-8"));
+        args.append("&payload=");
+        args.append(urlEncodedPayload);
+        args.append("&method=");
+        args.append(method);
+        args.append("&length=");
+        args.append(payload.length());
+        args.append("&checksum=");
+        args.append(URLEncoder.encode(_checksum, "utf-8"));
+        args.append("&kaptcha=");
+        args.append(kaptcha);
 
-		_isNew = false;
+        if (old_checksum != null && old_checksum.length() > 0)
+        {
+            args.append("&old_checksum=");
+            args.append(old_checksum);
+        }
 
-		return true;
+        postURL(WebROOT + "wallet", args.toString());
+
+        _isNew = false;
+
+        return true;
 	}
 
 	public void remoteDownload() {
