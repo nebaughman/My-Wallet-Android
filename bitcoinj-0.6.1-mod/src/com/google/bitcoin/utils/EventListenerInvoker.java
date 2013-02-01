@@ -16,6 +16,7 @@
 
 package com.google.bitcoin.utils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -36,10 +37,11 @@ import java.util.List;
  */
 public abstract class EventListenerInvoker<E> {
     public abstract void invoke(E listener);
-    
+
     public static <E> void invoke(List<E> listeners,
                                   EventListenerInvoker<E> invoker) {
         if (listeners == null) return;
+        /*
         synchronized (listeners) {
             for (int i = 0; i < listeners.size(); i++) {
                 E l = listeners.get(i);
@@ -50,6 +52,25 @@ public abstract class EventListenerInvoker<E> {
                     break;  // Listener removed itself and it was the last one.
                 } else if (listeners.get(i) != l) {
                     i--;  // Listener removed itself and it was not the last one.
+                }
+            }
+        }
+        */
+
+        // temporary fix to avoid IndexOutOfBoundsException if other threads
+        // remove listeners during an iteration.
+        //
+        // See bitcoinj discussion:
+        // https://groups.google.com/d/topic/bitcoinj/qI1bxRFxNrI/discussion
+        //
+        synchronized (listeners) // to maintain contract
+        {
+            List<E> copy = new ArrayList<E>(listeners);
+            for (E listener : copy)
+            {
+                synchronized (listener) // per contract
+                {
+                    invoker.invoke(listener);
                 }
             }
         }
