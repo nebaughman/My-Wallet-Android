@@ -101,6 +101,11 @@ public class MyECKey extends ECKey {
 		return null;
 	}
 
+	@Override
+    public boolean equals(Object o) {
+        return getInternalKey().equals(o);
+    }
+
     @Override
     public int hashCode() {
         return getInternalKey().hashCode();
